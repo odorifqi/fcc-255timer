@@ -1,6 +1,8 @@
 /* eslint-disable no-undef */
 const path = require("path");
 const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   entry: path.resolve(__dirname, "./src/index.js"),
@@ -31,7 +33,14 @@ module.exports = {
     path: path.resolve(__dirname, "./dist"),
     filename: "bundle.js",
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: "255 Clock",
+      template: path.resolve(__dirname, "./src/index.html"),
+    }),
+    new webpack.HotModuleReplacementPlugin(),
+  ],
   devServer: {
     static: path.resolve(__dirname, "./dist"),
     hot: true,
