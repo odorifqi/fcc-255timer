@@ -32,16 +32,21 @@ body {
     .length-control {
       color: white;
       display: inline-block;
-      .btn-level:nth-child(3) {
-        width: 40px;
+      // .btn-level:nth-child(3) {
+      //   width: 40px;
+      // }
+      .btn-level > input {
+        font-size: 25px;
+        width: 50px;
+        background-color: yellow;
       }
     }
     .timer {
-      border: 7px solid #13353a;
+      border: 5px solid #13353a;
       margin: 20px auto 10px auto;
       width: 270px;
-      height: 160px;
-      border-radius: 50px;
+      height: 170px;
+      border-radius: 10px;
       position: relative;
       .timer-wrapper {
         position: absolute;

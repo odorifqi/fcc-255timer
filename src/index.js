@@ -1,9 +1,11 @@
+/* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 import React from "react";
 import ReactDOM from "react-dom";
 import "./style.scss";
-import { TimerLengthControl } from "./timerLengthControl";
+import { TimerControl } from "./timerLengthControl";
 import { reducer } from "./reducer";
+console.log(`You're in ${process.env.NODE_ENV} mode`);
 
 const SW = () => {
   const [state, dispatch] = React.useReducer(reducer, {
@@ -20,21 +22,38 @@ const SW = () => {
     beep: null,
   });
 
-  const handleSession = (e) => {
+  const handleLength = (e) => {
     if (!state.sesOn && !state.breOn) {
       dispatch({
-        type: "SET_SESSION",
-        payload: e.currentTarget.value === "+" ? 1 : -1,
+        type: "SET_LENGTH",
+        payload: {
+          type: e.currentTarget.id.includes("break") ? "bre" : "ses",
+          value: e.currentTarget.value === "+" ? 1 : -1,
+        },
       });
     }
   };
 
-  const handleBreak = (e) => {
+  const handleInputLength = (e) => {
     if (!state.sesOn && !state.breOn) {
-      dispatch({
-        type: "SET_BREAK",
-        payload: e.currentTarget.value === "+" ? 1 : -1,
-      });
+      if (e.currentTarget.value < 0 || e.currentTarget.value > 60) {
+        warningVal();
+        dispatch({
+          type: "SET_INPUT_LENGTH",
+          payload: {
+            type: e.currentTarget.id.includes("break") ? "bre" : "ses",
+            value: e.currentTarget.id.includes("break") ? 5 : 25,
+          },
+        });
+      } else {
+        dispatch({
+          type: "SET_INPUT_LENGTH",
+          payload: {
+            type: e.currentTarget.id.includes("break") ? "bre" : "ses",
+            value: parseInt(e.currentTarget.value) || "",
+          },
+        });
+      }
     }
   };
 
@@ -57,6 +76,9 @@ const SW = () => {
   const setAudio = (audio) => {
     beep = audio;
   };
+
+  const warningVal = () =>
+    alert("value cannot be smaller than 1 or larger than 60");
 
   React.useEffect(() => {
     dispatch({ type: "SET_BEEP", payload: beep });
@@ -104,22 +126,13 @@ const SW = () => {
   return (
     <div>
       <h1>25 + 5 Clock</h1>
-      <TimerLengthControl
-        typeId="break"
-        length={state.breMinDisp}
-        lengthID="break-length"
-        onClick={handleBreak}
-        title="Break Length"
-        titleID="break-label"
+
+      <TimerControl
+        length={[state.breMinDisp, state.sesMinDisp]}
+        onClick={handleLength}
+        onChange={handleInputLength}
       />
-      <TimerLengthControl
-        typeId="session"
-        length={state.sesMinDisp}
-        lengthID="session-length"
-        onClick={handleSession}
-        title="Session Length"
-        titleID="session-label"
-      />
+
       <div className="timer">
         <div className="timer-wrapper">
           <div id="timer-label">{state.timerType}</div>
@@ -175,6 +188,3 @@ const SW = () => {
 };
 
 ReactDOM.render(<SW />, document.getElementById("root"));
-
-/* eslint-disable no-undef */
-module.hot.accept();

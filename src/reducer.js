@@ -1,5 +1,5 @@
-export const reducer = (state, action) => {
-  switch (action.type) {
+export const reducer = (state, { type, payload }) => {
+  switch (type) {
     case "SES_MIN":
       return { ...state, sesMin: state.sesMin - 1 };
     case "BRE_MIN":
@@ -7,15 +7,15 @@ export const reducer = (state, action) => {
     case "SES_SEC":
       return {
         ...state,
-        sesSec: action.payload ? action.payload : state.sesSec - 1,
+        sesSec: payload ? payload : state.sesSec - 1,
       };
     case "BRE_SEC":
       return {
         ...state,
-        breSec: action.payload ? action.payload : state.breSec - 1,
+        breSec: payload ? payload : state.breSec - 1,
       };
     case "START_STOP":
-      return { ...state, ...action.payload };
+      return { ...state, ...payload };
     case "RESET":
       return {
         ...state,
@@ -29,47 +29,35 @@ export const reducer = (state, action) => {
         timerType: "Session",
         timerOn: false,
       };
-    case "SET_SESSION":
+    case "SET_INPUT_LENGTH":
       return {
         ...state,
-        sesMinDisp:
-          state.sesMinDisp +
-          (state.sesMinDisp === 1 || state.sesMinDisp === 60
-            ? state.sesMinDisp + action.payload > 0 &&
-              state.sesMinDisp + action.payload < 61
-              ? action.payload
-              : 0
-            : action.payload),
-        sesMin:
-          state.sesMinDisp +
-          (state.sesMinDisp === 1 || state.sesMinDisp === 60
-            ? state.sesMinDisp + action.payload > 0 &&
-              state.sesMinDisp + action.payload < 61
-              ? action.payload
-              : 0
-            : action.payload),
-        sesSec: 60,
+        [`${payload.type}MinDisp`]: payload.value,
+        [`${payload.type}Min`]: payload.value,
+        [`${payload.type}Sec`]: 60,
       };
-    case "SET_BREAK":
+    case "SET_LENGTH":
       return {
         ...state,
-        breMinDisp:
-          state.breMinDisp +
-          (state.breMinDisp === 1 || state.breMinDisp === 60
-            ? state.breMinDisp + action.payload > 0 &&
-              state.breMinDisp + action.payload < 61
-              ? action.payload
+        [`${payload.type}MinDisp`]:
+          state[`${payload.type}MinDisp`] +
+          (state[`${payload.type}MinDisp`] === 1 ||
+          state[`${payload.type}MinDisp`] === 60
+            ? state[`${payload.type}MinDisp`] + payload.value > 0 &&
+              state[`${payload.type}MinDisp`] + payload.value < 61
+              ? payload.value
               : 0
-            : action.payload),
-        breMin:
-          state.breMinDisp +
-          (state.breMinDisp === 1 || state.breMinDisp === 60
-            ? state.breMinDisp + action.payload > 0 &&
-              state.breMinDisp + action.payload < 61
-              ? action.payload
+            : payload.value),
+        [`${payload.type}Min`]:
+          state[`${payload.type}MinDisp`] +
+          (state[`${payload.type}MinDisp`] === 1 ||
+          state[`${payload.type}MinDisp`] === 60
+            ? state[`${payload.type}MinDisp`] + payload.value > 0 &&
+              state[`${payload.type}MinDisp`] + payload.value < 61
+              ? payload.value
               : 0
-            : action.payload),
-        breSec: 60,
+            : payload.value),
+        [`${payload.type}Sec`]: 60,
       };
     case "START_BREAK":
       return {
@@ -92,7 +80,7 @@ export const reducer = (state, action) => {
     case "SET_BEEP":
       return {
         ...state,
-        beep: action.payload,
+        beep: payload,
       };
 
     default:

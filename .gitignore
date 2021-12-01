@@ -3,3 +3,7 @@
 
 # production
 /dist
+
+# misc
+.env.development
+.env.production
