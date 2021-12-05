@@ -40,10 +40,10 @@ const TimerLengthControl = (props) => {
   );
 };
 
-const BreakControl = ({ length, onClick, onChange }) => (
+const BreakControl = ({ length, onClick, onChange, breLength, ...other }) => (
   <TimerLengthControl
     typeId="break"
-    length={length}
+    length={breLength}
     lengthID="break-length"
     onClick={onClick}
     onChange={onChange}
@@ -52,10 +52,10 @@ const BreakControl = ({ length, onClick, onChange }) => (
   />
 );
 
-const SessionControl = ({ length, onClick, onChange }) => (
+const SessionControl = ({ length, onClick, onChange, sesLength, ...other }) => (
   <TimerLengthControl
     typeId="session"
-    length={length}
+    length={sesLength}
     lengthID="session-length"
     onClick={onClick}
     onChange={onChange}
@@ -64,12 +64,7 @@ const SessionControl = ({ length, onClick, onChange }) => (
   />
 );
 
-export const TimerControl = ({ length, onClick, onChange }) =>
+export const TimerControl = (props) =>
   [BreakControl, SessionControl].map((Control, index) => (
-    <Control
-      length={length[index]}
-      onClick={onClick}
-      key={index}
-      onChange={onChange}
-    />
+    <Control key={index} {...props} />
   ));

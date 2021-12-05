@@ -3,8 +3,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./style.scss";
-import { TimerControl } from "./timerLengthControl";
-import { reducer } from "./reducer";
+import { TimerControl } from "./components/timerLengthControl";
+import { reducer } from "./components/reducer";
+import { StartStopBtn, ResetBtn } from "./components/button";
+import { TimeDisplay } from "./components/timeDisplay";
 console.log(`You're in ${process.env.NODE_ENV} mode`);
 
 const SW = () => {
@@ -95,7 +97,6 @@ const SW = () => {
 
       if (state.sesSec === 0) {
         dispatch({ type: "SES_SEC", payload: 60 });
-
         if (state.sesMin === 0) {
           dispatch({ type: "START_BREAK" });
           state.beep.play();
@@ -112,7 +113,6 @@ const SW = () => {
 
       if (state.breSec === 0) {
         dispatch({ type: "BRE_SEC", payload: 60 });
-
         if (state.breMin === 0) {
           dispatch({ type: "START_SESSION" });
           state.beep.play();
@@ -126,54 +126,37 @@ const SW = () => {
   return (
     <div>
       <h1>25 + 5 Clock</h1>
-
-      <TimerControl
-        length={[state.breMinDisp, state.sesMinDisp]}
-        onClick={handleLength}
-        onChange={handleInputLength}
-      />
-
+      <div id="length-control-div">
+        <TimerControl
+          breLength={state.breMinDisp}
+          sesLength={state.sesMinDisp}
+          onClick={handleLength}
+          onChange={handleInputLength}
+        />
+      </div>
       <div className="timer">
         <div className="timer-wrapper">
           <div id="timer-label">{state.timerType}</div>
-          <div id="time-left">
-            {state.timerType === "Session"
-              ? state.sesMin.toString().padStart(2, "0")
-              : state.breMin.toString().padStart(2, "0")}
-            :
-            {state.timerType === "Session"
-              ? state.sesSec == 60
-                ? "00"
-                : state.sesSec.toString().padStart(2, "0")
-              : state.breSec == 60
-              ? "00"
-              : state.breSec.toString().padStart(2, "0")}
-          </div>
+          <TimeDisplay
+            timerType={state.timerType}
+            sesMin={state.sesMin}
+            breMin={state.breMin}
+            sesSec={state.sesSec}
+            breSec={state.breSec}
+          />
         </div>
       </div>
       <div className="button-div">
         {(!state.sesOn || !state.breOn) && (
-          <button id="start_stop" className="button" onClick={startStop}>
-            {state.timerOn
-              ? "Pause"
-              : state.timerType === "Session"
-              ? state.sesSec === 60
-                ? "Start"
-                : "Resume"
-              : state.breSec === 60
-              ? "Start"
-              : "Resume"}
-          </button>
+          <StartStopBtn
+            handleClick={startStop}
+            timerOn={state.timerOn}
+            timerType={state.timerType}
+            sesSec={state.sesSec}
+            breSec={state.breSec}
+          />
         )}
-
-        <button
-          id="reset"
-          className="button"
-          disabled={!state.sesSec}
-          onClick={reset}
-        >
-          reset
-        </button>
+        <ResetBtn handleClick={reset} />
       </div>
       <audio
         id="beep"

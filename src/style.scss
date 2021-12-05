@@ -16,7 +16,7 @@ body {
       margin-bottom: 20px;
     }
     .length-control {
-      width: 250px;
+      width: 225px;
     }
     button {
       background: none;
@@ -32,9 +32,7 @@ body {
     .length-control {
       color: white;
       display: inline-block;
-      // .btn-level:nth-child(3) {
-      //   width: 40px;
-      // }
+
       .btn-level > input {
         font-size: 25px;
         width: 50px;
@@ -75,6 +73,16 @@ body {
     -moz-transform: scale(0.8);
     -ms-transform: scale(0.8);
     -o-transform: scale(0.8);
+  }
+
+  #length-control-div {
+    display: flex;
+    margin-bottom: 3em;
+  }
+
+  .btn-level > i {
+    transform: scale(1.5);
+    width: 2em;
   }
 }
 
